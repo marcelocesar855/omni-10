@@ -26,7 +26,7 @@ module.exports = {
                 coordinates: [longitude, latitude]
             }
         
-            const dev = await Dev.create({
+            await Dev.create({
                 github_username,
                 name,
                 avatar_url,
@@ -39,11 +39,18 @@ module.exports = {
         return res.json(dev)
     },
 
-    async update(){
-
+    async update(req, res){
+        const { techs,  name, avatar_url, bio, longitude, latitude} = req.body
+        const location = {
+            type: 'Point',
+            coordinates: [longitude, latitude]
+        }
+        const dev = await Dev.findOneAndUpdate(req.params.id, { techs,  name, avatar_url, bio, location});
+        return res.json(dev);
     },
 
-    async destroy(){
-        
+    async destroy(req, res){
+        const dev = await Dev.findByIdAndDelete(req.params.id);
+        return res.json(dev);
     }
 }
